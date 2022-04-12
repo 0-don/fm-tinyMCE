@@ -1,22 +1,21 @@
 import * as editor from './editor';
 
- function heading() {
-   const element = document.createElement('h1');
-   element.innerText = 'TinyMCE Webpack demo';
-   return element;
- }
- const parent = document.createElement('p');
-
  function editorArea() {
    const element = document.createElement('textarea');
-   element.id = 'editor';
    return element;
  }
 
- parent.appendChild(editorArea());
+ function addStyle() {
+   const element = document.createElement('style');
+   element.innerText = `
+   .tox-tinymce {
+      height: 98vh !important;
+    }
+   `;
+   return element;
+ }
 
- document.body.appendChild(heading());
-
- document.body.appendChild(parent);
+ document.head.appendChild(addStyle());
+ document.body.appendChild(editorArea());
 
  editor.render();
