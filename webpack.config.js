@@ -1,17 +1,19 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: 'production',
   entry: './src/index.js',
+  sideEffects: false,
   resolve: {
     extensions: ['.js'],
   },
   plugins: [
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
-      title: 'TinyMCE Webpack Demo',
+      title: 'TinyMCE',
       meta: { viewport: 'width=device-width, initial-scale=1' },
     }),
   ],
@@ -28,7 +30,20 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          // keep_fnames: true,
+          format: { comments: false },
+        },
+        extractComments: false,
+      }),
+    ],
+  },
   output: {
+    publicPath: '',
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,

@@ -1,6 +1,6 @@
 /* Import TinyMCE */
 import tinymce from 'tinymce';
-import { html2pdf } from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 
 /* Default icons are required for TinyMCE 5.3 or above */
 import 'tinymce/icons/default';
@@ -46,12 +46,6 @@ import 'tinymce/plugins/pagebreak';
 import 'tinymce/plugins/emoticons/plugin';
 import 'tinymce/plugins/emoticons/js/emojis';
 
-/* Import premium plugins */
-/* NOTE: Download separately and add these to /src/plugins */
-/* import './plugins/checklist/plugin'; */
-/* import './plugins/powerpaste/plugin'; */
-/* import './plugins/powerpaste/js/wordimport'; */
-
 /* Import the skin */
 import 'tinymce/skins/ui/oxide/skin.css';
 
@@ -60,8 +54,8 @@ import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
 import contentCss from 'tinymce/skins/content/default/content.css';
 
 /* Initialize TinyMCE */
-export async function render() {
-  const tiny = await tinymce.init({
+export function render() {
+  tinymce.init({
     selector: 'textarea',
     plugins:
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars emoticons',
@@ -96,7 +90,7 @@ export async function render() {
       });
 
       editor.on('NodeChange', function () {
-        // FileMaker.PerformScript('setHtmlText', editor.getContent());
+        FileMaker.PerformScript('setHtmlText', editor.getContent());
       });
 
       editor.ui.registry.addButton('customInsertButton', {
@@ -115,15 +109,8 @@ export async function render() {
   });
 
   function createPDF() {
-    console.log(tinymce.get('myTextarea').getContent());
-    console.log(tinymce.activeEditor.getContent());
-    console.log(tiny[0].get('myTextarea').getContent());
-    console.log(tiny[0].activeEditor.getContent());
-    /*this is how we grab HTML form quill, but you can use other libraries.*/
-    const html =
-      '<div  class="ql-container ql-snow ql-editor" style="font-size: 16px; border: none">' +
-      tiny[0].selection.getContent() +
-      '</div>';
+    const html = tinymce.activeEditor.getContent();
+
     /*convert html to PDF*/
     html2pdf()
       .from(html)
@@ -146,24 +133,7 @@ export async function render() {
       })
       .outputPdf()
       .then(function (pdf) {
-        if (fmversion < 19) {
-          const baseurl =
-            'fmp' +
-            (fmversion < 17 ? '' : fmversion) +
-            '://$/' +
-            fmfile +
-            '?script=savePDF&param=';
-          if (isWindows) {
-            window.clipboardData.setData('Text', btoa(pdf));
-            const url = baseurl + 'copy';
-          } else {
-            const url = baseurl + encodeURIComponent(btoa(pdf));
-          }
-          window.location.href = url;
-        } else {
-          console.log(pdf, html);
-          FileMaker.PerformScript('savePDF', btoa(pdf));
-        }
+        FileMaker.PerformScript('savePDF', btoa(pdf));
       });
   }
 }
