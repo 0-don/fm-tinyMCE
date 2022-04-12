@@ -136,4 +136,6 @@ export function render() {
         FileMaker.PerformScript('savePDF', btoa(pdf));
       });
   }
+
+  window.createPDF = createPDF;
 }

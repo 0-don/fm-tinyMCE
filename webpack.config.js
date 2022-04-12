@@ -1,7 +1,9 @@
 const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+
 
 module.exports = {
   mode: 'production',
@@ -14,6 +16,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'TinyMCE',
       meta: { viewport: 'width=device-width, initial-scale=1' },
+      inject: "body"
+      
+    }),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
     }),
   ],
 
@@ -34,7 +41,7 @@ module.exports = {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          // keep_fnames: true,
+          keep_fnames: true,
           format: { comments: false },
         },
         extractComments: false,
