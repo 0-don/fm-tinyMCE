@@ -7,6 +7,7 @@
     "build": "webpack --config webpack.config.js"
   },
   "dependencies": {
+    "html2pdf.js": "^0.10.1",
     "tinymce": "^6.0.1"
   },
   "devDependencies": {

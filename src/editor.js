@@ -1,5 +1,6 @@
 /* Import TinyMCE */
 import tinymce from 'tinymce';
+import { html2pdf } from 'html2pdf.js';
 
 /* Default icons are required for TinyMCE 5.3 or above */
 import 'tinymce/icons/default';
@@ -41,6 +42,9 @@ import 'tinymce/plugins/wordcount';
 import 'tinymce/plugins/help';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/emoticons';
+import 'tinymce/plugins/pagebreak';
+import 'tinymce/plugins/emoticons/plugin';
+import 'tinymce/plugins/emoticons/js/emojis';
 
 /* Import premium plugins */
 /* NOTE: Download separately and add these to /src/plugins */
@@ -56,19 +60,22 @@ import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
 import contentCss from 'tinymce/skins/content/default/content.css';
 
 /* Initialize TinyMCE */
-export function render() {
-  tinymce.init({
+export async function render() {
+  const tiny = await tinymce.init({
     selector: 'textarea',
     plugins:
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars emoticons',
     menubar: 'file edit view insert format tools table help',
     toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table',
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table customInsertButton',
+    toolbar_mode: 'wrap',
     language: 'de',
-    image_advtab: true,
-    importcss_append: true,
+    quickbars_selection_toolbar:
+      'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+    contextmenu: 'link image table',
+
     file_picker_types: 'image',
-    file_picker_callback: function (cb, value, meta) {
+    file_picker_callback: function (cb) {
       const input = document.createElement('input');
       input.setAttribute('type', 'file');
       input.setAttribute('accept', 'image/*');
@@ -82,22 +89,40 @@ export function render() {
       };
       input.click();
     },
-    quickbars_selection_toolbar:
-      'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-    noneditable_class: 'mceNonEditable',
-    toolbar_mode: 'wrap',
-    contextmenu: 'link image table',
 
+    setup: function (editor) {
+      editor.on('init', function () {
+        editor.insertContent("&nbsp;<strong>It's my button!</strong>&nbsp;");
+      });
+
+      editor.on('NodeChange', function () {
+        // FileMaker.PerformScript('setHtmlText', editor.getContent());
+      });
+
+      editor.ui.registry.addButton('customInsertButton', {
+        text: 'My Button',
+        onAction: function (_) {
+          createPDF();
+          editor.insertContent("&nbsp;<strong>It's my button!</strong>&nbsp;");
+        },
+      });
+    },
+
+    // WEBPACK
     skin: false,
     content_css: false,
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
   });
 
   function createPDF() {
+    console.log(tinymce.get('myTextarea').getContent());
+    console.log(tinymce.activeEditor.getContent());
+    console.log(tiny[0].get('myTextarea').getContent());
+    console.log(tiny[0].activeEditor.getContent());
     /*this is how we grab HTML form quill, but you can use other libraries.*/
     const html =
       '<div  class="ql-container ql-snow ql-editor" style="font-size: 16px; border: none">' +
-      quill.root.innerHTML +
+      tiny[0].selection.getContent() +
       '</div>';
     /*convert html to PDF*/
     html2pdf()
@@ -136,6 +161,7 @@ export function render() {
           }
           window.location.href = url;
         } else {
+          console.log(pdf, html);
           FileMaker.PerformScript('savePDF', btoa(pdf));
         }
       });

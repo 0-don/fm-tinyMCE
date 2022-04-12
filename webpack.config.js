@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: './src/index.js',
   resolve: {
     extensions: ['.js'],
@@ -28,17 +28,6 @@ module.exports = {
       },
     ],
   },
-  // optimization: {
-  //   splitChunks: {
-  //     chunks: 'all',
-  //     cacheGroups: {
-  //       tinymceVendor: {
-  //         test: /[\\/]node_modules[\\/](tinymce)[\\/](.*js|.*skin.css)|[\\/]plugins[\\/]/,
-  //         name: 'tinymce',
-  //       },
-  //     },
-  //   },
-  // },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
