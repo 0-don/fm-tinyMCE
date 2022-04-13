@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack --config webpack.config.js",
-    "build": "webpack --config webpack.config.js --env production",
+    "build": "webpack --config webpack.config.js --env production"
   },
   "dependencies": {
     "cross-env": "^7.0.3",
