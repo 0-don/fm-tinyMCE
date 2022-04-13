@@ -43,7 +43,7 @@ module.exports = (env) => {
       ],
     },
     optimization: {
-      chunkIds: false,
+      chunkIds: env.production ? false : 'natural',
       concatenateModules: true,
       minimize: true,
       minimizer: [
@@ -62,6 +62,11 @@ module.exports = (env) => {
       filename: '[name].js',
       path: path.resolve(__dirname, 'dist'),
       clean: true,
+    },
+    devServer: {
+      static: {
+        directory: path.resolve(__dirname, 'dist'),
+      },
     },
   };
 };

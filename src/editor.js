@@ -111,7 +111,7 @@ export function render() {
     content_css: false,
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
   });
-
+  console.log('-swaaaa');
   const exportPDF = () => {
     const pdf = createPDF();
 
