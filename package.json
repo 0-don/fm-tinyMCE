@@ -8,7 +8,9 @@
     "remove": "rm -rf dist/820.js"
   },
   "dependencies": {
+    "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.1",
+    "jspdf": "^2.5.1",
     "tinymce": "^6.0.1"
   },
   "devDependencies": {

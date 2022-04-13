@@ -1,6 +1,7 @@
 /* Import TinyMCE */
 import tinymce from 'tinymce';
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
+import { jsPDF } from 'jspdf';
 
 /* Default icons are required for TinyMCE 5.3 or above */
 import 'tinymce/icons/default';
@@ -41,10 +42,7 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/wordcount';
 import 'tinymce/plugins/help';
 import 'tinymce/plugins/quickbars';
-import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/pagebreak';
-import 'tinymce/plugins/emoticons/plugin';
-import 'tinymce/plugins/emoticons/js/emojis';
 
 /* Import the skin */
 import 'tinymce/skins/ui/oxide/skin.css';
@@ -55,13 +53,19 @@ import contentCss from 'tinymce/skins/content/default/content.css';
 
 /* Initialize TinyMCE */
 export function render() {
+  const runFmScript = (script, value) => {
+    try {
+      FileMaker.PerformScript(script, value);
+    } catch (_) {}
+  };
+
   tinymce.init({
     selector: 'textarea',
     plugins:
-      'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars emoticons',
+      'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
     menubar: 'file edit view insert format tools table help',
     toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table customInsertButton',
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table PDF newPDF',
     toolbar_mode: 'wrap',
     language: 'de',
     quickbars_selection_toolbar:
@@ -86,18 +90,25 @@ export function render() {
 
     setup: function (editor) {
       editor.on('init', function () {
-        editor.insertContent("&nbsp;<strong>It's my button!</strong>&nbsp;");
+        editor.insertContent(
+          `<p style="text-align: right;"><br></p><p><span style="font-size: 36pt;">A</span></p><p><span style="font-size: 36pt;">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><br></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><br></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><br></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p>`
+        );
       });
 
       editor.on('NodeChange', function () {
-        FileMaker.PerformScript('setHtmlText', editor.getContent());
+        runFmScript('setHtmlText', editor.getContent());
       });
 
-      editor.ui.registry.addButton('customInsertButton', {
-        text: 'My Button',
-        onAction: function (_) {
+      editor.ui.registry.addButton('PDF', {
+        text: 'Export PDF',
+        onAction: function () {
           createPDF();
-          editor.insertContent("&nbsp;<strong>It's my button!</strong>&nbsp;");
+        },
+      });
+      editor.ui.registry.addButton('newPDF', {
+        text: 'newPDF',
+        onAction: function () {
+          newPDF();
         },
       });
     },
@@ -108,34 +119,63 @@ export function render() {
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
   });
 
-  function createPDF() {
-    const html = tinymce.activeEditor.getContent();
+  function newPDF() {
+    const doc = new jsPDF('portrait', 'mm', 'a4');
+    console.log(
+      tinymce.activeEditor.getBody().clientHeight,
+      tinymce.activeEditor.getBody().clientWidth
+    );
 
-    /*convert html to PDF*/
-    html2pdf()
-      .from(html)
-      .set({
-        margin: [10, 20, 20, 10],
-        filename: 'newfile.pdf',
-        image: {
-          type: 'jpeg',
-          quality: 0.95,
-        },
-        html2canvas: {
-          scale: 4,
-        },
-        jsPDF: {
-          unit: 'mm',
-          format: 'A4',
-          orientation: 'portrait',
-          compressPDF: 'true',
-        },
-      })
-      .outputPdf()
-      .then(function (pdf) {
-        FileMaker.PerformScript('savePDF', btoa(pdf));
-      });
+    doc.html(tinymce.activeEditor.getBody(), {
+      callback: function (pdf) {
+        // console.log(pdf.output('datauristring',  ));
+        pdf.save();
+        // runFmScript('savePDF', btoa(exportPDF));
+      },
+
+      autoPaging: 'text',
+      margin: [10, 20, 20, 10],
+
+      html2canvas: {
+        allowTaint: true,
+        useCORS: true,
+        letterRendering: true,
+        scale: 1,
+      },
+    });
   }
 
-  window.createPDF = createPDF;
+  // function createPDF() {
+  //   const html = tinymce.activeEditor.getContent();
+
+  //   /*convert html to PDF*/
+  //   html2pdf()
+  //     .from(html)
+  //     .set({
+  //       margin: [10, 20, 20, 10],
+  //       filename: 'newfile.pdf',
+  //       image: {
+  //         type: 'jpeg',
+  //         quality: 0.95,
+  //       },
+  //       html2canvas: {
+  //         scale: 4,
+  //       },
+  //       jsPDF: {
+  //         unit: 'mm',
+  //         format: 'A4',
+  //         orientation: 'portrait',
+  //         compressPDF: 'true',
+  //       },
+  //     })
+  //     .outputPdf()
+  //     .then(function (pdf) {
+  //       console.log('pdf printed', typeof pdf);
+  //       pdf.save('newfile.pdf');
+  //       runFmScript('savePDF', btoa(pdf));
+  //     });
+  // }
+
+  window.newPDF = newPDF;
+  // window.createPDF = createPDF;
 }

@@ -9,7 +9,7 @@ const HTMLInlineCSSWebpackPlugin =
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   entry: './src/index.js',
   resolve: {
     extensions: ['.js'],
@@ -41,11 +41,13 @@ module.exports = {
     ],
   },
   optimization: {
+    chunkIds: false,
+    concatenateModules: true,
     minimize: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          keep_fnames: true,
+          keep_fnames: false,
           format: { comments: false },
         },
         extractComments: false,
