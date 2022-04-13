@@ -1,7 +1,6 @@
 /* Import TinyMCE */
 import tinymce from 'tinymce';
-// import html2pdf from 'html2pdf.js';
-import { jsPDF } from 'jspdf';
+import html2pdf from 'html2pdf.js';
 
 /* Default icons are required for TinyMCE 5.3 or above */
 import 'tinymce/icons/default';
@@ -65,7 +64,7 @@ export function render() {
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
     menubar: 'file edit view insert format tools table help',
     toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table PDF newPDF',
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table exportPDF downloadPDF',
     toolbar_mode: 'wrap',
     language: 'de',
     quickbars_selection_toolbar:
@@ -90,26 +89,20 @@ export function render() {
 
     setup: function (editor) {
       editor.on('init', function () {
-        editor.insertContent(
-          `<p style="text-align: right;"><br></p><p><span style="font-size: 36pt;">A</span></p><p><span style="font-size: 36pt;">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><br></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" width="100" height=50"></p><p><br></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><br></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p><p><span style="font-size: 36pt;">AAAAAAAAAAAAAAAAAAA</span></p>`
-        );
+        editor.insertContent(``);
       });
 
       editor.on('NodeChange', function () {
         runFmScript('setHtmlText', editor.getContent());
       });
 
-      editor.ui.registry.addButton('PDF', {
+      editor.ui.registry.addButton('exportPDF', {
         text: 'Export PDF',
-        onAction: function () {
-          createPDF();
-        },
+        onAction: () => exportPDF(),
       });
-      editor.ui.registry.addButton('newPDF', {
-        text: 'newPDF',
-        onAction: function () {
-          newPDF();
-        },
+      editor.ui.registry.addButton('downloadPDF', {
+        text: 'Download PDF',
+        onAction: () => downloadPDF(),
       });
     },
 
@@ -119,63 +112,59 @@ export function render() {
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
   });
 
-  function newPDF() {
-    const doc = new jsPDF('portrait', 'mm', 'a4');
-    console.log(
-      tinymce.activeEditor.getBody().clientHeight,
-      tinymce.activeEditor.getBody().clientWidth
-    );
+  const exportPDF = () => {
+    const pdf = createPDF();
 
-    doc.html(tinymce.activeEditor.getBody(), {
-      callback: function (pdf) {
-        // console.log(pdf.output('datauristring',  ));
-        pdf.save();
-        // runFmScript('savePDF', btoa(exportPDF));
-      },
-
-      autoPaging: 'text',
-      margin: [10, 20, 20, 10],
-
-      html2canvas: {
-        allowTaint: true,
-        useCORS: true,
-        letterRendering: true,
-        scale: 1,
-      },
+    pdf.outputPdf().then((pdf) => {
+      if (fmversion < 19) {
+        var baseurl =
+          'fmp' +
+          (fmversion < 17 ? '' : fmversion) +
+          '://$/' +
+          fmfile +
+          '?script=savePDF&param=';
+        if (isWindows) {
+          window.clipboardData.setData('Text', btoa(pdf));
+          var url = baseurl + 'copy';
+        } else {
+          var url = baseurl + encodeURIComponent(btoa(pdf));
+        }
+        window.location.href = url;
+      } else {
+        runFmScript('savePDF', btoa(pdf));
+      }
     });
+  };
+
+  const downloadPDF = () => {
+    const pdf = createPDF();
+    pdf.save().then(() => console.log('pdf downlaoded'));
+  };
+
+  function createPDF() {
+    const html = tinymce.activeEditor.getContent();
+
+    /*convert html to PDF*/
+    return html2pdf()
+      .from(html)
+      .set({
+        margin: [10, 20, 20, 10],
+        filename: 'newfile.pdf',
+        image: {
+          type: 'jpeg',
+          quality: 0.95,
+        },
+        html2canvas: {
+          scale: 4,
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'A4',
+          orientation: 'portrait',
+          compressPDF: 'true',
+        },
+      });
   }
 
-  // function createPDF() {
-  //   const html = tinymce.activeEditor.getContent();
-
-  //   /*convert html to PDF*/
-  //   html2pdf()
-  //     .from(html)
-  //     .set({
-  //       margin: [10, 20, 20, 10],
-  //       filename: 'newfile.pdf',
-  //       image: {
-  //         type: 'jpeg',
-  //         quality: 0.95,
-  //       },
-  //       html2canvas: {
-  //         scale: 4,
-  //       },
-  //       jsPDF: {
-  //         unit: 'mm',
-  //         format: 'A4',
-  //         orientation: 'portrait',
-  //         compressPDF: 'true',
-  //       },
-  //     })
-  //     .outputPdf()
-  //     .then(function (pdf) {
-  //       console.log('pdf printed', typeof pdf);
-  //       pdf.save('newfile.pdf');
-  //       runFmScript('savePDF', btoa(pdf));
-  //     });
-  // }
-
-  window.newPDF = newPDF;
-  // window.createPDF = createPDF;
+  window.createPDF = exportPDF;
 }
