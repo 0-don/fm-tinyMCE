@@ -3,7 +3,9 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-
+const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
+const HTMLInlineCSSWebpackPlugin =
+  require('html-inline-css-webpack-plugin').default;
 
 module.exports = {
   mode: 'production',
@@ -16,12 +18,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'TinyMCE',
       meta: { viewport: 'width=device-width, initial-scale=1' },
-      inject: "body"
-      
+      inject: 'body',
     }),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,
     }),
+    new HtmlInlineScriptPlugin(),
+    new HTMLInlineCSSWebpackPlugin(),
   ],
 
   module: {
