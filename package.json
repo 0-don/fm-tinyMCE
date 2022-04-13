@@ -8,7 +8,6 @@
     "build": "webpack --config webpack.config.js --env production"
   },
   "dependencies": {
-    "cross-env": "^7.0.3",
     "html2pdf.js": "0.9.3",
     "tinymce": "^6.0.1"
   },
