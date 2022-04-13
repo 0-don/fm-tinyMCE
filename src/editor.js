@@ -111,7 +111,7 @@ export function render() {
     content_css: false,
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
   });
-  console.log('-swaaaa');
+
   const exportPDF = () => {
     const pdf = createPDF();
 
@@ -149,7 +149,6 @@ export function render() {
       .from(html)
       .set({
         margin: [10, 20, 20, 10],
-        filename: 'newfile.pdf',
         image: {
           type: 'jpeg',
           quality: 0.95,
