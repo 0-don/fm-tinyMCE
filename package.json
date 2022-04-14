@@ -8,6 +8,7 @@
     "build": "webpack --config webpack.config.js --env production"
   },
   "dependencies": {
+    "dotenv": "^16.0.0",
     "html2pdf.js": "0.9.3",
     "tinymce": "^6.0.1"
   },
