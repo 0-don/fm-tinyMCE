@@ -80,10 +80,10 @@ export function render() {
       const input = document.createElement('input');
       input.setAttribute('type', 'file');
       input.setAttribute('accept', 'image/*');
-      input.onchange = () => {
+      input.onchange = function () {
         const file = this.files[0];
         const reader = new FileReader();
-        reader.onload = () => {
+        reader.onload = function () {
           cb(reader.result, { title: file.name });
         };
         reader.readAsDataURL(file);
