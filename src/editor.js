@@ -77,14 +77,19 @@ export function render() {
 
     file_picker_types: 'image',
     file_picker_callback: (cb) => {
-      const input = document.createElement('input');
+      var input = document.createElement('input');
       input.setAttribute('type', 'file');
       input.setAttribute('accept', 'image/*');
       input.onchange = function () {
-        const file = this.files[0];
-        const reader = new FileReader();
+        var file = this.files[0];
+        var reader = new FileReader();
         reader.onload = function () {
-          cb(reader.result, { title: file.name });
+          var id = 'blobid' + new Date().getTime();
+          var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+          var base64 = reader.result.split(',')[1];
+          var blobInfo = blobCache.create(id, file, base64);
+          blobCache.add(blobInfo);
+          cb(blobInfo.blobUri(), { title: file.name });
         };
         reader.readAsDataURL(file);
       };
