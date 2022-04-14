@@ -8,22 +8,22 @@ tested only on latest filemaker version 19.4.2.204
 
 you will need [nodejs](https://nodejs.org/en/) to build it
 
-1. npm install or yarn
+1. npm install
 
-```bash
- npm i
-```
+    ```bash
+    npm i
+    ```
+    or
 
-```bash
- yarn
-```
-
+    ```bash
+    yarn
+    ```
 2. build
+    ```bash
+    npm run build
+    ```
+    or
 
-```bash
- npm run build
-```
-
-```bash
- yarn build
-```
+    ```bash
+    yarn build
+    ```
