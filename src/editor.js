@@ -64,7 +64,7 @@ export function render() {
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
     menubar: 'file edit view insert format tools table help',
     toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table getPDF downloadPDF',
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table getPDF downloadPDF setContent',
     toolbar_mode: 'wrap',
 
     quickbars_selection_toolbar:
@@ -109,6 +109,10 @@ export function render() {
       editor.ui.registry.addButton('downloadPDF', {
         text: 'Download PDF',
         onAction: downloadPDF,
+      });
+      editor.ui.registry.addButton('setContent', {
+        text: 'set Content',
+        onAction: () => runFmScript('setContent', editor.getContent()),
       });
     },
 

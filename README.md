@@ -2,7 +2,7 @@
 
 realtime html generation + pdf export
 
-tested only on latest filemaker version 19.4.2.204
+tested on latest filemaker version 19.4.2.204 and webdirect
 
 **suported languages are german or english change it in `.env`**
 ```env
