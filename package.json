@@ -8,7 +8,6 @@
     "build": "webpack --config webpack.config.js --env production"
   },
   "dependencies": {
-    "fm-gofer": "^1.5.0",
     "html2pdf.js": "0.9.3",
     "tinymce": "^6.0.1"
   },
