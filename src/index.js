@@ -1,4 +1,3 @@
-require('dotenv').config();
 import * as editor from './editor';
 
 function editorArea() {

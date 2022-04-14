@@ -4,7 +4,11 @@ realtime html generation + pdf export
 
 tested only on latest filemaker version 19.4.2.204
 
-**default language is german, change it in `src/editor.js`**
+**suported languages are german or english change it in `.env`**
+```env
+LANGUAGE=en
+LANGUAGE=de
+```
 
 you will need [nodejs](https://nodejs.org/en/) to build it
 
