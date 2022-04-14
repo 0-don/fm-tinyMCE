@@ -1,6 +1,7 @@
 /* Import TinyMCE */
 import tinymce from 'tinymce';
 import html2pdf from 'html2pdf.js';
+import * as FMGofer from 'fm-gofer';
 
 /* Default icons are required for TinyMCE 5.3 or above */
 import 'tinymce/icons/default';
@@ -51,10 +52,10 @@ import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
 import contentCss from 'tinymce/skins/content/default/content.css';
 
 /* Initialize TinyMCE */
-export function render() {
-  const runFmScript = (script, value) => {
+export async function render() {
+  const runFmScript = async (script, value) => {
     try {
-      FileMaker.PerformScript(script, value);
+      return await FMGofer.PerformScript(script, value, 0, '');
     } catch (_) {}
   };
 
@@ -64,7 +65,7 @@ export function render() {
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
     menubar: 'file edit view insert format tools table help',
     toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table exportPDF downloadPDF',
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table getPDF downloadPDF',
     toolbar_mode: 'wrap',
     language: 'de',
     quickbars_selection_toolbar:
@@ -88,21 +89,27 @@ export function render() {
     },
 
     setup: function (editor) {
-      editor.on('init', function () {
-        editor.insertContent(``);
+      editor.on('init', async function () {
+        console.log('editor Initialized');
+        await runFmScript('setContent', '');
       });
 
-      editor.on('NodeChange', function () {
-        runFmScript('setHtmlText', editor.getContent());
-      });
-
-      editor.ui.registry.addButton('exportPDF', {
-        text: 'Export PDF',
-        onAction: () => exportPDF(),
+      editor.ui.registry.addButton('getPDF', {
+        text: 'Get PDF',
+        onAction: () => getPDF(),
       });
       editor.ui.registry.addButton('downloadPDF', {
         text: 'Download PDF',
         onAction: () => downloadPDF(),
+      });
+    },
+
+    init_instance_callback: function (editor) {
+      editor.on('focusout', async () => {
+        runFmScript('getContent', editor.getContent());
+      });
+      editor.on('NodeChange', async () => {
+        runFmScript('getContent', editor.getContent());
       });
     },
 
@@ -111,35 +118,6 @@ export function render() {
     content_css: false,
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
   });
-
-  const exportPDF = () => {
-    const pdf = createPDF();
-
-    pdf.outputPdf().then((pdf) => {
-      if (fmversion < 19) {
-        var baseurl =
-          'fmp' +
-          (fmversion < 17 ? '' : fmversion) +
-          '://$/' +
-          fmfile +
-          '?script=savePDF&param=';
-        if (isWindows) {
-          window.clipboardData.setData('Text', btoa(pdf));
-          var url = baseurl + 'copy';
-        } else {
-          var url = baseurl + encodeURIComponent(btoa(pdf));
-        }
-        window.location.href = url;
-      } else {
-        runFmScript('savePDF', btoa(pdf));
-      }
-    });
-  };
-
-  const downloadPDF = () => {
-    const pdf = createPDF();
-    pdf.save().then(() => console.log('pdf downlaoded'));
-  };
 
   function createPDF() {
     const html = tinymce.activeEditor.getContent();
@@ -165,5 +143,22 @@ export function render() {
       });
   }
 
-  window.createPDF = exportPDF;
+  const getPDF = () => {
+    const pdf = createPDF();
+    pdf.outputPdf().then((pdf) => {
+      console.log('pdf exported');
+      runFmScript('savePDF', btoa(pdf));
+    });
+  };
+
+  const downloadPDF = () => {
+    const pdf = createPDF();
+    console.log('pdf downlaoded');
+    pdf.save();
+  };
+
+  const setContent = (content) => tinymce.activeEditor.setContent(content);
+
+  window.getPDF = getPDF;
+  window.setContent = setContent;
 }
