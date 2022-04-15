@@ -74,22 +74,22 @@ export function render() {
     // REMOVE THIS LINE TO CHANGE BACK TO DEFAULT ENGLISH
     language: process.env.LANGUAGE,
     //###################################################
-
+    image_advtab: true,
     file_picker_types: 'image',
     file_picker_callback: (cb) => {
-      var input = document.createElement('input');
+      const input = document.createElement('input');
       input.setAttribute('type', 'file');
       input.setAttribute('accept', 'image/*');
       input.onchange = function () {
-        var file = this.files[0];
-        var reader = new FileReader();
+        const file = this.files[0];
+        const reader = new FileReader();
         reader.onload = function () {
-          var id = 'blobid' + new Date().getTime();
-          var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-          var base64 = reader.result.split(',')[1];
-          var blobInfo = blobCache.create(id, file, base64);
+          const id = 'blobid' + new Date().getTime();
+          const blobCache = tinymce.activeEditor.editorUpload.blobCache;
+          const base64 = reader.result.split(',')[1];
+          const blobInfo = blobCache.create(id, file, base64);
           blobCache.add(blobInfo);
-          cb(blobInfo.blobUri(), { title: file.name });
+          cb(reader.result, { title: file.name });
         };
         reader.readAsDataURL(file);
       };
@@ -101,6 +101,13 @@ export function render() {
         console.log('editor Initialized');
         runFmScript('setContent', editor.getContent());
       });
+
+      // editor.on('PreInit', function () {
+      //   editor.editorUpload.addFilter(function (img) {
+      //     console.log(!img.src.indexOf('data:image/svg+xml'))
+      //     return false;
+      //   });
+      // });
 
       editor.ui.registry.addButton('getPDF', {
         text: 'Get PDF',

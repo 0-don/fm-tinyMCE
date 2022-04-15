@@ -60,7 +60,7 @@ module.exports = (env) => {
       ],
     },
     output: {
-      publicPath: '',
+      publicPath: './src',
       filename: '[name].js',
       path: path.resolve(__dirname, 'dist'),
       clean: true,
