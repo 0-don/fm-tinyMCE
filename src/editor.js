@@ -65,7 +65,7 @@ export function render() {
     menubar: 'file edit view insert format tools table help',
     toolbar:
       'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table getPDF downloadPDF setContent',
-    toolbar_mode: 'wrap',
+    toolbar_mode: window.innerHeight <= 500 ? 'sliding' : 'wrap',
 
     quickbars_selection_toolbar:
       'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
