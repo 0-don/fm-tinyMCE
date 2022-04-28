@@ -12,7 +12,7 @@ function addStyle() {
       height: 100% !important;
     }
     html, body {
-      height: 99%;
+      height: 97.8%;
     }
    `;
   return element;

@@ -99,6 +99,7 @@ export function render() {
     setup: (editor) => {
       editor.on('init', () => {
         console.log('editor Initialized');
+        editor.execCommand('mceFullScreen');
         runFmScript('setContent', editor.getContent());
       });
 
