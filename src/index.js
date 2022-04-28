@@ -9,7 +9,7 @@ function addStyle() {
   const element = document.createElement('style');
   element.innerText = `
    .tox-tinymce {
-      height: 98vh !important;
+      height: 97vh !important;
     }
    `;
   return element;

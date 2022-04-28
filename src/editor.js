@@ -62,7 +62,7 @@ export function render() {
     selector: 'textarea',
     plugins:
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
-    menubar: 'file edit view insert format tools table help',
+    menubar:'edit view insert format tools table', // 'file edit view insert format tools table help',
     toolbar:
       'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table getPDF downloadPDF setContent',
     toolbar_mode: window.innerHeight <= 500 ? 'sliding' : 'wrap',
@@ -124,7 +124,7 @@ export function render() {
     },
 
     init_instance_callback: (editor) => {
-      editor.on('input Change focusout', () =>
+      editor.on('input Change focusout focusin', () =>
         runFmScript('getContent', editor.getContent())
       );
     },
