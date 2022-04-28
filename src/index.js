@@ -9,7 +9,10 @@ function addStyle() {
   const element = document.createElement('style');
   element.innerText = `
    .tox-tinymce {
-      height: 97vh !important;
+      height: 100% !important;
+    }
+    html, body {
+      height: 99%;
     }
    `;
   return element;

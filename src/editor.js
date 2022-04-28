@@ -62,7 +62,7 @@ export function render() {
     selector: 'textarea',
     plugins:
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
-    menubar:'edit view insert format tools table', // 'file edit view insert format tools table help',
+    menubar: 'edit view insert format tools table', // 'file edit view insert format tools table help',
     toolbar:
       'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table getPDF downloadPDF setContent',
     toolbar_mode: window.innerHeight <= 500 ? 'sliding' : 'wrap',
@@ -101,13 +101,6 @@ export function render() {
         console.log('editor Initialized');
         runFmScript('setContent', editor.getContent());
       });
-
-      // editor.on('PreInit', function () {
-      //   editor.editorUpload.addFilter(function (img) {
-      //     console.log(!img.src.indexOf('data:image/svg+xml'))
-      //     return false;
-      //   });
-      // });
 
       editor.ui.registry.addButton('getPDF', {
         text: 'Get PDF',
