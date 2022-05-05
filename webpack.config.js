@@ -7,7 +7,6 @@ const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
 const HTMLInlineCSSWebpackPlugin =
   require('html-inline-css-webpack-plugin').default;
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
 
 module.exports = (env) => {
   console.log(env);
@@ -18,7 +17,6 @@ module.exports = (env) => {
       extensions: ['.js'],
     },
     plugins: [
-      new Dotenv(),
       new MiniCssExtractPlugin(),
       new HtmlWebpackPlugin({
         title: 'TinyMCE',
