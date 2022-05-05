@@ -11,9 +11,6 @@ import 'tinymce/themes/silver';
 /* A model is also required */
 import 'tinymce/models/dom';
 
-/* German language */
-import './de';
-
 /* Import plugins */
 import 'tinymce/plugins/preview';
 import 'tinymce/plugins/importcss';
@@ -49,6 +46,10 @@ import 'tinymce/skins/ui/oxide/skin.css';
 /* Import content css */
 import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
 import contentCss from 'tinymce/skins/content/default/content.css';
+
+/* German language -> Change this line */
+import './langs/de';
+// Import the language file that you need
 
 /* Initialize TinyMCE */
 export function render() {
