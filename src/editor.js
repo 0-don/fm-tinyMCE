@@ -72,7 +72,7 @@ export function render() {
     contextmenu: 'link image table',
 
     // REMOVE THIS LINE TO CHANGE BACK TO DEFAULT ENGLISH
-    language: process.env.LANGUAGE,
+    language: navigator.language,
     //###################################################
     image_advtab: true,
     file_picker_types: 'image',
