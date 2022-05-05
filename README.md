@@ -4,7 +4,8 @@ realtime html generation + pdf export
 
 tested on latest filemaker version 19.4.2.204 and webdirect
 
-**suported languages are german or english it detects it via your operating system language**
+**suported languages are german or english it detects it via your browser language**
+
 to add more languages go to ``src/editor.js`` line 50-52
 
 you will need [nodejs](https://nodejs.org/en/) to build it
