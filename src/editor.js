@@ -73,7 +73,7 @@ export function render() {
     contextmenu: 'link image table',
 
     // REMOVE THIS LINE TO CHANGE BACK TO DEFAULT ENGLISH
-    language: navigator.language,
+    language: window.navigator.userLanguage || window.navigator.language,
     //###################################################
     image_advtab: true,
     file_picker_types: 'image',
@@ -119,7 +119,7 @@ export function render() {
     },
 
     init_instance_callback: (editor) => {
-      editor.on('input Change focusout focusin', () =>
+      editor.on('input Change focusin', () =>
         runFmScript('getContent', editor.getContent())
       );
     },
