@@ -165,7 +165,7 @@ export function render() {
 
   const downloadPDF = () => {
     const pdf = createPDF();
-    console.log('pdf downlaoded');
+    console.log('pdf downloaded');
     pdf.save();
   };
 
