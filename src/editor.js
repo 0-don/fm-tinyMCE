@@ -65,7 +65,7 @@ export function render() {
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
     menubar: 'edit view insert format tools table', // 'file edit view insert format tools table help',
     toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table getPDF downloadPDF setContent',
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table printPdf downloadPDF setContent',
     toolbar_mode: window.innerHeight <= 500 ? 'sliding' : 'wrap',
 
     quickbars_selection_toolbar:
@@ -104,14 +104,16 @@ export function render() {
         runFmScript('setContent', editor.getContent());
       });
 
-      editor.ui.registry.addButton('getPDF', {
-        text: 'Get PDF',
-        onAction: getPDF,
+      editor.ui.registry.addButton('printPdf', {
+        text: 'Print PDF',
+        onAction: printPDF,
       });
+
       editor.ui.registry.addButton('downloadPDF', {
         text: 'Download PDF',
         onAction: downloadPDF,
       });
+
       editor.ui.registry.addButton('setContent', {
         text: 'set Content',
         onAction: () => runFmScript('setContent', editor.getContent()),
@@ -155,10 +157,10 @@ export function render() {
       });
   }
 
-  const getPDF = () => {
+  const printPDF = () => {
     const pdf = createPDF();
     pdf.outputPdf().then((pdf) => {
-      console.log('pdf exported');
+      console.log('pdf printed');
       runFmScript('savePDF', btoa(pdf));
     });
   };
@@ -171,7 +173,7 @@ export function render() {
 
   const setContent = (content) => tinymce.activeEditor.setContent(content);
 
-  window.getPDF = getPDF;
+  window.printPDF = printPDF;
   window.setContent = setContent;
   window.runFmScript = runFmScript;
 }
