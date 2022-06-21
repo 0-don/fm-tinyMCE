@@ -53,6 +53,7 @@ import './langs/de';
 
 /* Initialize TinyMCE */
 export function render() {
+  // global script with try catch to test locally in browser without filemaker
   const runFmScript = (script, value) => {
     try {
       FileMaker.PerformScript(script, value);
@@ -60,14 +61,19 @@ export function render() {
   };
 
   tinymce.init({
+    //tinymce binding area
     selector: 'textarea',
+    
+    // plugins available from tinyMCE
     plugins:
       'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
-    menubar: 'edit view insert format tools table', // 'file edit view insert format tools table help',
-    toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table printPdf downloadPDF setContent',
-    toolbar_mode: window.innerHeight <= 500 ? 'sliding' : 'wrap',
+    menubar: 'edit view insert format tools table',
 
+    // plugin order & button order
+    toolbar:
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table printPdf downloadPDF | myCustomScript | setContent getContent', // 'file edit view insert format tools table help',
+
+    toolbar_mode: window.innerHeight <= 500 ? 'sliding' : 'wrap',
     quickbars_selection_toolbar:
       'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
     contextmenu: 'link image table',
@@ -75,6 +81,8 @@ export function render() {
     // REMOVE THIS LINE TO CHANGE BACK TO DEFAULT ENGLISH
     language: window.navigator.userLanguage || window.navigator.language,
     //###################################################
+
+    //image proccesing base64 + drag & drop
     image_advtab: true,
     file_picker_types: 'image',
     file_picker_callback: (cb) => {
@@ -98,44 +106,64 @@ export function render() {
     },
 
     setup: (editor) => {
+      // function runs on tinymce initializiation, set to Fullscreen & set tinyMCE content if there is any
       editor.on('init', () => {
         console.log('editor Initialized');
         editor.execCommand('mceFullScreen');
         runFmScript('setContent', editor.getContent());
       });
 
+      // !important insert created button into toolbar e.g. printPdf
       editor.ui.registry.addButton('printPdf', {
         text: 'Print PDF',
         onAction: printPDF,
       });
 
+      // !important insert created button into toolbar e.g. downloadPDF
       editor.ui.registry.addButton('downloadPDF', {
         text: 'Download PDF',
         onAction: downloadPDF,
       });
 
+      // !important insert created button into toolbar e.g. myCustomScript
+      editor.ui.registry.addButton('myCustomScript', {
+        text: 'My Custom Script',
+        onAction: () => {
+          runFmScript('myCustomScript');
+        },
+      });
+
+      // !important insert created button into toolbar e.g. setContent
       editor.ui.registry.addButton('setContent', {
         text: 'set Content',
         onAction: () => runFmScript('setContent', editor.getContent()),
       });
+
+      // !important insert created button into toolbar e.g. getContent
+      editor.ui.registry.addButton('getContent', {
+        text: 'get Content',
+        onAction: () => runFmScript('getContent', editor.getContent()),
+      });
     },
 
+    // realtime update on editor change
     init_instance_callback: (editor) => {
       editor.on('input Change focusin', () =>
         runFmScript('getContent', editor.getContent())
       );
     },
 
-    // WEBPACK
+    // WEBPACK config
     skin: false,
     content_css: false,
     content_style: contentUiCss.toString() + '\n' + contentCss.toString(),
   });
 
   function createPDF() {
+    // get current tinymce html content
     const html = tinymce.activeEditor.getContent();
 
-    /*convert html to PDF*/
+    /*convert html to PDF as DIN A4 hopefully*/
     return html2pdf()
       .from(html)
       .set({
@@ -157,6 +185,7 @@ export function render() {
       });
   }
 
+  //creates pdf from content converts to base64 sends it to filemaker which puts it in to a container
   const printPDF = () => {
     const pdf = createPDF();
     pdf.outputPdf().then((pdf) => {
@@ -165,14 +194,17 @@ export function render() {
     });
   };
 
+  // downloads created pdf in the webvieweres browser => location: default browser download
   const downloadPDF = () => {
     const pdf = createPDF();
     console.log('pdf downloaded');
     pdf.save();
   };
 
+  // set external content (fm) to tinyMCE editor
   const setContent = (content) => tinymce.activeEditor.setContent(content);
 
+  //make script globally available for filemaker else filemaker wont find the script in the webviewer
   window.printPDF = printPDF;
   window.setContent = setContent;
   window.runFmScript = runFmScript;
