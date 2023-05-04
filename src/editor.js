@@ -48,8 +48,8 @@ import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
 import contentCss from 'tinymce/skins/content/default/content.css';
 
 /* German language -> Change this line */
-import './langs/de';
-import './langs/es';
+// import './langs/de';
+// import './langs/es';
 // Import the language file that you need
 
 /* Initialize TinyMCE */
@@ -80,7 +80,7 @@ export function render() {
     contextmenu: 'link image table',
 
     // REMOVE THIS LINE TO CHANGE BACK TO DEFAULT ENGLISH
-    language: window.navigator.userLanguage || window.navigator.language,
+    // language: window.navigator.userLanguage || window.navigator.language,
     //###################################################
 
     //image proccesing base64 + drag & drop
