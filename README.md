@@ -2,7 +2,7 @@
 
 realtime html generation + pdf export
 
-tested on latest filemaker version 19.4.2.204 and webdirect
+tested on latest filemaker version 20.1.1.35 and webdirect
 
 **suported languages are german or english it detects it via your browser language**
 
