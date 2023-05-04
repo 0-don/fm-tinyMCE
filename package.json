@@ -1,26 +1,28 @@
 {
-  "name": "fm-tinymce",
-  "version": "1.1.0",
-  "main": "src/index.js",
-  "license": "MIT",
+  "name": "tiny",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "webpack serve",
-    "build": "webpack --config webpack.config.js --env production"
+    "build": "rollup --config rollup.config.ts --configPlugin swc3"
   },
   "dependencies": {
-    "html2pdf.js": "0.10.1",
-    "tinymce": "Don-Cryptus/tinymce-fix"
+    "html2pdf.js": "^0.10.1",
+    "tinymce": "^6.4.2"
   },
   "devDependencies": {
-    "css-loader": "^6.7.3",
-    "css-minimizer-webpack-plugin": "^5.0.0",
-    "html-inline-css-webpack-plugin": "^1.11.1",
-    "html-inline-script-webpack-plugin": "^3.1.0",
-    "html-webpack-plugin": "^5.5.1",
-    "mini-css-extract-plugin": "^2.7.5",
-    "terser-webpack-plugin": "^5.3.7",
-    "webpack": "^5.81.0",
-    "webpack-cli": "^5.0.2",
-    "webpack-dev-server": "^4.13.3"
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-terser": "^0.4.1",
+    "@swc/core": "^1.3.56",
+    "@types/node": "^18.16.3",
+    "node-html-parser": "^6.1.5",
+    "postcss": "^8.4.23",
+    "prettier": "^2.8.8",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "rollup": "^3.21.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-swc3": "^0.8.1",
+    "typescript": "^5.0.4"
   }
 }
