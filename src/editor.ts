@@ -66,12 +66,12 @@ export function render() {
 
     // plugins available from tinyMCE
     plugins:
-      'importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
+      'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars',
     menubar: 'edit view insert format tools table',
 
     // plugin order & button order
     toolbar:
-      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  save print | insertfile image link anchor codesample | ltr rtl | table printPdf downloadPDF | myCustomScript | setContent getContent', // 'file edit view insert format tools table help',
+      'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | table printPdf downloadPDF | myCustomScript | setContent getContent', // 'file edit view insert format tools table help',
 
     toolbar_mode: window.innerHeight <= 500 ? 'sliding' : 'wrap',
     quickbars_selection_toolbar:
